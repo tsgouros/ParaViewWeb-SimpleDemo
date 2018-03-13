@@ -1,0 +1,44 @@
+{
+  "name": "ParaViewWeb-SimpleDemo",
+  "version": "1.0.0",
+  "description": "As simple a demo as I can make.",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tsgouros/ParaViewWeb-SimpleDemo.git"
+  },
+  "keywords": [],
+  "author": "tsgouros",
+  "license": "CC0-1.0",
+  "dependencies": {
+    "ajv": "^6.0.0",
+    "font-awesome": "^4.7.0",
+    "kw-web-suite": "^5.0.0",
+    "monologue.js": "^0.3.5",
+    "normalize.css": "^8.0.0",
+    "paraviewweb": "^3.0.9",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "wslink": "^0.1.5",
+    "hammerjs": "^2.0.8"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.4.5"
+  }
+}
