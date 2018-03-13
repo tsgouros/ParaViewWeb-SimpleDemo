@@ -1,8 +1,16 @@
-"""
-This module is a ParaViewWeb server application.
-    Use it like this:
-     $ pvpython PVWSDServer.py -i localhost -p 1234
-"""
+# This code is released under the Creative Commons zero license.  Go wild, but
+# it would be nice to preserve the credit if you find it helpful.
+#
+# Tom Sgouros
+# Center for Computation and Visualization
+# Brown University
+# March 2018.
+#
+# This module is a ParaViewWeb server application.
+#    Use it like this:
+#     $ pvpython PVWSDServer.py -i localhost -p 1234
+#
+# There should be a README to explain how to start the client.
 
 # import to process args
 import os
@@ -21,13 +29,7 @@ from paraview import simple
 from wslink import server
 
 import json
-
-try:
-    import argparse
-except ImportError:
-    # since  Python 2.6 and earlier don't have argparse, we simply provide
-    # the source for the same as _argparse and we use it instead.
-    from vtk.util import _argparse as argparse
+import argparse
 
 # =============================================================================
 # Create custom Pipeline Manager class to handle clients requests
@@ -36,37 +38,9 @@ except ImportError:
 class PVWSDServer(pv_wslink.PVServerProtocol):
 
     authKey = "wslink-secret"
-    dsHost = None
-    dsPort = 11111
-    rsHost = None
-    rsPort = 11111
-    rcPort = -1
-    fileToLoad = None
-    groupRegex = "[0-9]+\\."
-    excludeRegex = "^\\.|~$|^\\$"
-    plugins = None
-    filterFile = None
-    colorPalette = None
-    proxies = None
-    allReaders = True
-    saveDataDir = os.getcwd()
     viewportScale=1.0
     viewportMaxWidth=2560
     viewportMaxHeight=1440
-    config = {
-        "profiles": {
-            "default": {
-                "modules_included": [],
-                "modules_excluded": [],
-                "viewType": 1,
-            },
-            "secondary": {
-                "modules_included": [],
-                "modules_excluded": [],
-                "viewType": 2,
-            },
-        },
-    }
 
 
     @staticmethod
@@ -77,19 +51,24 @@ class PVWSDServer(pv_wslink.PVServerProtocol):
 
     @staticmethod
     def configure(args):
+      # Same here. Not really using this, but this is how it should look.
       PVWSDServer.authKey   = args.authKey
       PVWSDServer.data      = args.data
 
 
     def initialize(self):
 
+      # Register the built-in protocols: MouseHandler, ViewPort and
+      # ViewPortImageDelivery.  (You can see these over on the client
+      # in the createClient call)
       self.registerVtkWebProtocol(pv_protocols.ParaViewWebMouseHandler())
       self.registerVtkWebProtocol(pv_protocols.ParaViewWebViewPort(PVWSDServer.viewportScale, PVWSDServer.viewportMaxWidth, PVWSDServer.viewportMaxHeight))
       self.registerVtkWebProtocol(pv_protocols.ParaViewWebViewPortImageDelivery())
 
+      # Instantiate an object with the custom protocols...
       PVWSDTest = PVWSDProtocols.PVWSDTest()
 
-      ## Register the PVWSD components
+      #                                      ... and register them, too.
       self.registerVtkWebProtocol(PVWSDTest)
 
       # Update authentication key to use
@@ -100,6 +79,7 @@ class PVWSDServer(pv_wslink.PVServerProtocol):
       simple.GetRenderView().Background = [0,0,0]
       simple.GetRenderView().Background2 = [0,0,0]
 
+      # Initialize our scene.
       PVWSDTest.drawCone()
 
       # Update interaction mode
@@ -128,13 +108,11 @@ if __name__ == "__main__":
   # Create argument parser
   parser = argparse.ArgumentParser(description="PVWSD")
 
-  # Add arguments
+  # Add arguments with argparse.
   server.add_arguments(parser)
   PVWSDServer.add_arguments(parser)
   args = parser.parse_args()
   PVWSDServer.configure(args)
-
-  args.fsEndpoints = 'ds=' + args.data
 
   # Start server
   server.start_webserver(options=args, protocol=PVWSDServer)

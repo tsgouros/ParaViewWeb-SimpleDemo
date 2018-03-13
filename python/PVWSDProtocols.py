@@ -1,3 +1,10 @@
+# This code is released under the Creative Commons zero license.  Go wild, but
+# it would be nice to preserve the credit if you find it helpful.
+#
+# Tom Sgouros
+# Center for Computation and Visualization
+# Brown University
+# March 2018.
 import os, sys, logging, types, inspect, traceback, logging, re, json, base64
 from time import time
 
@@ -10,21 +17,9 @@ import paraview
 from paraview import simple, servermanager
 from paraview.web import protocols as pv_protocols
 
-# Needed for:
-#    vtkSMPVRepresentationProxy
-#    vtkSMTransferFunctionProxy
-#    vtkSMTransferFunctionManager
-from vtk.vtkPVServerManagerRendering import vtkSMPVRepresentationProxy, vtkSMTransferFunctionProxy, vtkSMTransferFunctionManager
-
-# Needed for:
-#    vtkSMProxyManager
-from vtk.vtkPVServerManagerCore import vtkSMProxyManager
-
-# Needed for:
-#    vtkDataObject
-from vtk.vtkCommonDataModel import vtkDataObject
-
-
+# This class inherits from the standard ParaViewWeb protocols, and adds a
+# few new ones with the @exportRPC decorator.  These become RPC calls that
+# can be invoked from the web client.
 class PVWSDTest(pv_protocols.ParaViewWebProtocol):
 
     def __init__(self):
@@ -37,11 +32,20 @@ class PVWSDTest(pv_protocols.ParaViewWebProtocol):
     def addListener(self, dataChangedInstance):
         self.dataListeners.append(dataChangedInstance)
 
+    # This function is not invoked remotely, just used to set up the
+    # paraview visualization and the data in it.  If you are editing this,
+    # try recording a Paraview session with the trace turned on, and then
+    # compare it to this code.
     def drawCone(self):
 
         ##################################################
         # create a new Cone object
         self.cone1 = simple.Cone()
+
+        ## In a Paraview Trace recorded session, the 'simple.' object is
+        ## not necessary.  Take your Trace output and add 'simple.' to all
+        ## the capitalized functions and add 'self.' to the local
+        ## variables, and try just dropping it in here.
 
         # set active source
         simple.SetActiveSource(self.cone1)
@@ -76,6 +80,20 @@ class PVWSDTest(pv_protocols.ParaViewWebProtocol):
         self.renderView1.CameraParallelScale = 0.85
 
         ##################################################
+
+    # This is the decorator that creates an RPC entry point.  The number of
+    # arguments is set by the function definition the decorator is
+    # decorating.
+    @exportRPC("pvwsdprotocol.change.sides")
+    def changeSides(self, N):
+
+        # Properties modified on cone1.  Note the type change. (A string is
+        # what is delivered.)
+        self.cone1.Resolution = int(N)
+
+        # update the view to ensure updated data information
+        self.renderView1.Update()
+        return "**** changed number of sides to " + str(N) + " *****"
 
 
     @exportRPC("pvwsdprotocol.show.cone")
@@ -121,7 +139,6 @@ class PVWSDTest(pv_protocols.ParaViewWebProtocol):
             self.renderView1.Update()
 
         self.colorToggle = not self.colorToggle
-
 
         return "******** executed change color with: " + str(arg1) + str(arg2) + " *******"
 
