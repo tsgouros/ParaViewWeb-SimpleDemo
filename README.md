@@ -60,8 +60,7 @@ that cry out to be added, please feel free to fix or add them, and
 offer me a pull request with the features added.  But remember, this
 is for beginners, so please be liberal with the comments.  Please
 remember that anyone can see *what* your code is doing, but nobody can
-tell *why* it's doing it.  Any fool can write code only they can use;
-the hard thing is to write code that is useful to the rest of us.
+tell *why* it's doing it.
 
 
 # Building and running.
