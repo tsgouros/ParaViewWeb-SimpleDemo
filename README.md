@@ -10,10 +10,12 @@ its management.
 
 This code is released under the Creative Commons zero license.  Go wild.
 
+```
 Tom Sgouros
 Center for Computation and Visualization
 Brown University
 March 2018.
+```
 
 # What's going on
 
@@ -64,16 +66,16 @@ the hard thing is to write code that is useful to the rest of us.
 
 # Building and running.
 Try this:
-
+```
 $ cd python
 $ pvpython SimpleDemoServer.py -i localhost -p 1234
-
+```
 Over on the client, try this:
-
+```
 $ cd js
 $ npm install
 $ npm run build
 $ npm start
-
+```
 Then cross your fingers and go to a browser and open localhost:8080.
 
