@@ -65,9 +65,11 @@ tell *why* it's doing it.
 
 # Building and running.
 Try this:
+
 ```
+$ python -m pip install autobahn twisted wslink
 $ cd python
-$ pvpython SimpleDemoServer.py -i localhost -p 1234
+$ pvpython PVWSDServer.py -i localhost -p 1234
 ```
 Over on the client, try this:
 ```
@@ -77,4 +79,3 @@ $ npm run build
 $ npm start
 ```
 Then cross your fingers and go to a browser and open localhost:8080.
-
