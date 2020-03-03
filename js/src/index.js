@@ -174,4 +174,3 @@ ReactDOM.render(<PVWSDControlPanel />,
 
 // Let 'er rip.
 smartConnect.connect();
-

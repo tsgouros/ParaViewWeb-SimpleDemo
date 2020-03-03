@@ -15,24 +15,12 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            query: { presets: ['react', 'es2015'] }
-          }
-        ]
+        loader: 'babel-loader',
+        options: { presets: ['@babel/preset-env', '@babel/preset-react'] }
       },
       {
-        test: /css$/,  // Covers css and mcss
-        use: [
-          { loader: 'style-loader'},
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true
-            }
-          }
-        ]
+        test: /\.m?css$/,
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
